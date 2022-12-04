@@ -199,7 +199,7 @@ public class DijkstraShortestPathAlg
 	 * @param sink_vertex
 	 * @return
 	 */
-	public Path get_shortest_path(BaseVertex source_vertex, BaseVertex sink_vertex)
+	public Path get_shortest_path(BaseVertex source_vertex, BaseVertex sink_vertex, int stops)
 	{
 		determine_shortest_paths(source_vertex, sink_vertex, true);
 		//
@@ -210,6 +210,10 @@ public class DijkstraShortestPathAlg
 		{
 			BaseVertex cur_vertex = sink_vertex;
 			do{
+				if(vertex_list.size()+1>stops) {
+					System.out.println("Stops count greater than 4");
+					return new Path();
+				}
 				vertex_list.add(cur_vertex);
 				cur_vertex = _predecessor_index.get(cur_vertex);
 			}while(cur_vertex != null && cur_vertex != source_vertex);

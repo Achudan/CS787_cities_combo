@@ -57,7 +57,7 @@ public class YenTopKShortestPathsAlgTest
 	{
 		System.out.println("Testing Dijkstra Shortest Path Algorithm!");
 		DijkstraShortestPathAlg alg = new DijkstraShortestPathAlg(graph);
-		System.out.println(alg.get_shortest_path(graph.get_vertex(4), graph.get_vertex(5)));
+		System.out.println(alg.get_shortest_path(graph.get_vertex(4), graph.get_vertex(5),1));
 	}
 	
 	@Test
@@ -66,7 +66,7 @@ public class YenTopKShortestPathsAlgTest
 		System.out.println("Testing batch processing of top-k shortest paths!");
 		YenTopKShortestPathsAlg yenAlg = new YenTopKShortestPathsAlg(graph);
 		List<Path> shortest_paths_list = yenAlg.get_shortest_paths(
-				graph.get_vertex(4), graph.get_vertex(5), 100);
+				graph.get_vertex(4), graph.get_vertex(5), 100, 3);
 		System.out.println(":"+shortest_paths_list);
 		System.out.println(yenAlg.get_result_list().size());	
 	}

@@ -65,6 +65,9 @@ public class YenTopKShortestPathsAlg
 	// variables for debugging and testing
 	private int _generated_path_num = 0;
 	
+	//total number of stops
+	private int _stops = Integer.MAX_VALUE;
+	
 	/**
 	 * Default constructor.
 	 * 
@@ -75,6 +78,7 @@ public class YenTopKShortestPathsAlg
 	{
 		this(graph, null, null);		
 	}
+	
 	
 	/**
 	 * Constructor 2
@@ -138,7 +142,7 @@ public class YenTopKShortestPathsAlg
 	public Path get_shortest_path(BaseVertex source_vt, BaseVertex target_vt)
 	{
 		DijkstraShortestPathAlg dijkstra_alg = new DijkstraShortestPathAlg(_graph);
-		return dijkstra_alg.get_shortest_path(source_vt, target_vt);
+		return dijkstra_alg.get_shortest_path(source_vt, target_vt, _stops);
 	}
 	
 	/**
@@ -243,6 +247,11 @@ public class YenTopKShortestPathsAlg
 								cur_path_vertex_list.get(j+1));
 						pre_path_list.add(cur_vertex);
 					}
+					
+					if(sub_path.get_vertices().size()+pre_path_list.size() > _stops+1) {
+//						System.out.println("This can be ignored");
+						return null;
+					}
 				}
 				pre_path_list.addAll(sub_path.get_vertices());
 
@@ -294,10 +303,11 @@ public class YenTopKShortestPathsAlg
 	 * @return
 	 */
 	public List<Path> get_shortest_paths(BaseVertex source_vertex, 
-			BaseVertex target_vertex, int top_k)
+			BaseVertex target_vertex, int top_k, int stops)
 	{
 		_source_vertex = source_vertex;
 		_target_vertex = target_vertex;
+		_stops = stops;
 		
 		_init();
 		int count = 0;
