@@ -163,7 +163,6 @@ public class DijkstraShortestPathAlg
 		// 1. get the neighboring vertices 
 		Set<BaseVertex> neighbor_vertex_list = is_source2sink ? 
 			_graph.get_adjacent_vertices(vertex) : _graph.get_precedent_vertices(vertex);
-			
 		// 2. update the distance passing on current vertex
 		for(BaseVertex cur_adjacent_vertex : neighbor_vertex_list)
 		{

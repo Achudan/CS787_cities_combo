@@ -141,7 +141,6 @@ public class YenTopKShortestPathsAlg
 	 */
 	public Path get_shortest_path(BaseVertex source_vt, BaseVertex target_vt)
 	{
-		System.out.println(_graph.get_edge_StartDate(source_vt, target_vt));
 		DijkstraShortestPathAlg dijkstra_alg = new DijkstraShortestPathAlg(_graph);
 		return dijkstra_alg.get_shortest_path(source_vt, target_vt, _stops);
 	}
@@ -275,6 +274,8 @@ public class YenTopKShortestPathsAlg
 					cur_recover_vertex.get_id(), succ_vertex.get_id()));
 			
 			//3.4.6 update cost if necessary
+//			System.out.println(_graph.cityMapInverse.get(cur_recover_vertex.get_id())+" "+ _graph.cityMapInverse.get(succ_vertex.get_id()));
+//			System.out.println(_graph.get_edge_Cost(cur_recover_vertex, succ_vertex));
 			double cost_1 = _graph.get_edge_weight(cur_recover_vertex, succ_vertex) 
 				+ reverse_tree.get_start_vertex_distance_index().get(succ_vertex);
 			
