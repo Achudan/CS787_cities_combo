@@ -10,6 +10,7 @@ public class TravelRecommendation {
 
 	public static void main(String[] args) {
 		Graph graph = new VariableGraph("data/mockData_v2_chk.csv");
+		System.out.print("Dummy print");
 		YenTopKShortestPathsAlg yenAlg = new YenTopKShortestPathsAlg(graph);
 		List<Path> shortest_paths_list = yenAlg.get_shortest_paths(
 				graph.get_vertex(4), graph.get_vertex(5), 500, 4);
