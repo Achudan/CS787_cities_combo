@@ -30,6 +30,7 @@
  */
 package edu.asu.emit.qyan.alg.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -45,6 +46,7 @@ public class Path implements BaseElementWithWeight
 {
 	List<BaseVertex> _vertex_list = new Vector<BaseVertex>();
 	double _weight = -1;
+	public ArrayList<ArrayList<String>> paths = new ArrayList<ArrayList<String>>();
 	
 	public Path(){};
 	
@@ -96,6 +98,6 @@ public class Path implements BaseElementWithWeight
 	
 	public String toString()
 	{
-		return _vertex_list.toString()+":"+_weight;
+		return paths.toString()+":"+_weight;
 	}
 }

@@ -39,6 +39,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -82,6 +84,12 @@ public class Graph implements BaseGraph
 	
 	// the number of arcs in the graph
 	protected int _edge_num = 0;
+	
+	static private int counter = 0;
+	
+	static public Map<String, Integer> cityMap = new HashMap<>();
+	static public Map<Integer, String> cityMapInverse = new HashMap<>();
+	
 	
 	/**
 	 * Constructor 1 
@@ -172,12 +180,37 @@ public class Graph implements BaseGraph
 				}else
 				{
 					//2.2.2 find a new edge and put it in the graph  
-					String[] str_list = line.trim().split("\\s");
+//					String[] str_list = line.trim().split("\\s");
+					String[] str_list = line.trim().split(",");
+					int start_vertex_id = 0;
+					int end_vertex_id = 0;
+					if(!cityMap.containsKey(str_list[0])) {
+						start_vertex_id = counter++;
+						addToMap(str_list[0], start_vertex_id);
+					}
+					else {
+						start_vertex_id = cityMap.get(str_list[0]);
+					}
 					
-					int start_vertex_id = Integer.parseInt(str_list[0]);
-					int end_vertex_id = Integer.parseInt(str_list[1]);
-					double weight = Double.parseDouble(str_list[2]);
-					add_edge(start_vertex_id, end_vertex_id, weight);
+					if(!cityMap.containsKey(str_list[1])) {
+						end_vertex_id = counter++;
+						addToMap(str_list[1], end_vertex_id);
+					}
+					else {
+						end_vertex_id = cityMap.get(str_list[1]);
+					}
+					
+//					int start_vertex_id = Integer.parseInt(str_list[0]);
+//					int end_vertex_id = Integer.parseInt(str_list[1]);
+					GraphParams gp = new GraphParams();
+					gp.setWeightFlag("cost");
+					gp.setCost(Double.parseDouble(str_list[2]));
+					gp.setStartDate(new Date(Long.parseLong(str_list[3])));
+					gp.setDuration(durationInMs(str_list[4]));
+					gp.setWeight();
+//					ArrayList<String> params = new ArrayList<>();
+//					params.add(String.valueOf(str_list[2]));
+					add_edge(start_vertex_id, end_vertex_id, gp);
 				}
 				//
 				line = bufRead.readLine();
@@ -191,6 +224,24 @@ public class Graph implements BaseGraph
 		}
 	}
 
+	private void addToMap(String k, int v) {
+		// TODO Auto-generated method stub
+		cityMap.put(k, v);
+		cityMapInverse.put(v, k);
+	}
+
+	private double durationInMs(String duration) {
+		double d = Double.parseDouble(duration);
+        long hrs = (long) d;
+        d = d - Math.floor(d);
+        long halfHour = 0;
+        if (d == 0.5)
+            halfHour = 30;
+        long HOUR = 3600 * 1000;
+        double durationInDouble = hrs * HOUR + (halfHour * 60 * 1000) + (30 * 60 * 1000);
+		return durationInDouble;
+	}
+
 	/**
 	 * Note that this may not be used externally, because some other members in the class
 	 * should be updated at the same time. 
@@ -199,8 +250,9 @@ public class Graph implements BaseGraph
 	 * @param end_vertex_id
 	 * @param weight
 	 */
-	protected void add_edge(int start_vertex_id, int end_vertex_id, double weight)
+	protected void add_edge(int start_vertex_id, int end_vertex_id, GraphParams gp)
 	{
+		double weight = gp.getWeight();
 		// actually, we should make sure all vertices ids must be correct. 
 		if(!_id_vertex_index.containsKey(start_vertex_id)
 		|| !_id_vertex_index.containsKey(end_vertex_id) 
