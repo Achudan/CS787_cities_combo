@@ -141,6 +141,7 @@ public class YenTopKShortestPathsAlg
 	 */
 	public Path get_shortest_path(BaseVertex source_vt, BaseVertex target_vt)
 	{
+		System.out.println(_graph.get_edge_StartDate(source_vt, target_vt));
 		DijkstraShortestPathAlg dijkstra_alg = new DijkstraShortestPathAlg(_graph);
 		return dijkstra_alg.get_shortest_path(source_vt, target_vt, _stops);
 	}

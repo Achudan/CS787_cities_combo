@@ -72,6 +72,10 @@ public class Graph implements BaseGraph
 	protected Map<Pair<Integer, Integer>, Double> _vertex_pair_weight_index = 
 		new HashMap<Pair<Integer,Integer>, Double>();
 	
+	//index for edge params in the graph
+	protected Map<Pair<Integer, Integer>, GraphParams> _vertex_pair_graph_params_index= 
+			new HashMap<Pair<Integer,Integer>, GraphParams>();
+	
 	// index for vertices in the graph
 	protected Map<Integer, BaseVertex> _id_vertex_index = 
 		new HashMap<Integer, BaseVertex>();
@@ -114,6 +118,7 @@ public class Graph implements BaseGraph
 		_fanin_vertices_index.putAll(graph_._fanin_vertices_index);
 		_fanout_vertices_index.putAll(graph_._fanout_vertices_index);
 		_vertex_pair_weight_index.putAll(graph_._vertex_pair_weight_index);
+		_vertex_pair_graph_params_index.putAll(graph_._vertex_pair_graph_params_index);
 	}
 	
 	/**
@@ -133,6 +138,7 @@ public class Graph implements BaseGraph
 		_fanin_vertices_index.clear();
 		_fanout_vertices_index.clear();
 		_vertex_pair_weight_index.clear();
+		_vertex_pair_graph_params_index.clear();
 	}
 	
 	/**
@@ -285,6 +291,10 @@ public class Graph implements BaseGraph
 				new Pair<Integer, Integer>(start_vertex_id, end_vertex_id), 
 				weight);
 		
+		_vertex_pair_graph_params_index.put(
+				new Pair<Integer, Integer>(start_vertex_id, end_vertex_id), 
+				gp);
+		
 		++_edge_num;
 	}
 	
@@ -360,6 +370,33 @@ public class Graph implements BaseGraph
 							_vertex_pair_weight_index.get(
 									new Pair<Integer, Integer>(source.get_id(), sink.get_id())) 
 						  : DISCONNECTED;
+	}
+	
+	public Date get_edge_StartDate(BaseVertex source, BaseVertex sink)
+	{
+		return _vertex_pair_graph_params_index.containsKey(
+					new Pair<Integer, Integer>(source.get_id(), sink.get_id()))? 
+							_vertex_pair_graph_params_index.get(
+									new Pair<Integer, Integer>(source.get_id(), sink.get_id())).getStartDate() 
+						  : null;
+	}
+	
+	public double get_edge_Duration(BaseVertex source, BaseVertex sink)
+	{
+		return _vertex_pair_graph_params_index.containsKey(
+					new Pair<Integer, Integer>(source.get_id(), sink.get_id()))? 
+							_vertex_pair_graph_params_index.get(
+									new Pair<Integer, Integer>(source.get_id(), sink.get_id())).getDuration() 
+						  : null;
+	}
+	
+	public double get_edge_Cost(BaseVertex source, BaseVertex sink)
+	{
+		return _vertex_pair_graph_params_index.containsKey(
+					new Pair<Integer, Integer>(source.get_id(), sink.get_id()))? 
+							_vertex_pair_graph_params_index.get(
+									new Pair<Integer, Integer>(source.get_id(), sink.get_id())).getCost()
+						  : null;
 	}
 
 	/**
