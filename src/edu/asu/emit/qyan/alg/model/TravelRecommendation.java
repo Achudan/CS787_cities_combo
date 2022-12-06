@@ -9,10 +9,10 @@ import edu.asu.emit.qyan.alg.model.abstracts.BaseVertex;
 public class TravelRecommendation {
 
 	public static void main(String[] args) {
-		Graph graph = new VariableGraph("data/mockData_v2_chk.csv");
+		Graph graph = new VariableGraph("data/mockData_v2_chk - Copy.csv");
 		YenTopKShortestPathsAlg yenAlg = new YenTopKShortestPathsAlg(graph);
 		List<Path> shortest_paths_list = yenAlg.get_shortest_paths(
-				graph.get_vertex(4), graph.get_vertex(5), 500, 4);
+				graph.get_vertex(Graph.cityMap.get("New York")), graph.get_vertex(Graph.cityMap.get("San Francisco")), 500, 4);
 		
 		for(Path path: shortest_paths_list) {
 			

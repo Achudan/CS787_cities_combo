@@ -173,7 +173,7 @@ public class YenTopKShortestPathsAlg
 		int count = _result_list.size();
 		
 		//3.2 remove the vertices and arcs in the graph
-		for(int i=0; i<count-1; ++i)
+		for(int i=0; i<count; ++i)
 		{
 			Path cur_result_path = _result_list.get(i);
 							
@@ -315,6 +315,7 @@ public class YenTopKShortestPathsAlg
 		int count = 0;
 		while(has_next() && count < top_k)
 		{
+			System.out.print(target_vertex);
 			next();
 			++count;
 		}

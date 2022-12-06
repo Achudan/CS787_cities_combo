@@ -65,7 +65,7 @@ public class Vertex implements BaseVertex, Comparable<Vertex>
 	{
 		_weight = status;
 	}
-	
+
 	public int compareTo(Vertex r_vertex)
 	{
 		double diff = this._weight - r_vertex._weight;

@@ -35,6 +35,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import javafx.scene.control.ListCell;
+
 /**
  * @author <a href='mailto:Yan.Qi@asu.edu'>Yan Qi</a>
  * @version $Revision: 430 $
@@ -48,6 +50,6 @@ public interface BaseGraph
 	Date get_edge_StartDate(BaseVertex source, BaseVertex sink);
 	double get_edge_Duration(BaseVertex source, BaseVertex sink);
 	double get_edge_Cost(BaseVertex source, BaseVertex sink);
-	Set<BaseVertex> get_adjacent_vertices(BaseVertex vertex);
-	Set<BaseVertex> get_precedent_vertices(BaseVertex vertex);
+	List<BaseVertex> get_adjacent_vertices(BaseVertex vertex);
+	List<BaseVertex> get_precedent_vertices(BaseVertex vertex);
 }

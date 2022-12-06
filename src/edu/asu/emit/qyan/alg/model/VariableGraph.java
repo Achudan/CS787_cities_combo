@@ -31,6 +31,7 @@
 
 package edu.asu.emit.qyan.alg.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -173,13 +174,13 @@ public class VariableGraph extends Graph
 	 * @param vertex
 	 * @return
 	 */
-	public Set<BaseVertex> get_adjacent_vertices(BaseVertex vertex)
+	public List<BaseVertex> get_adjacent_vertices(BaseVertex vertex)
 	{
-		Set<BaseVertex> ret_set = new HashSet<BaseVertex>();
+		List<BaseVertex> ret_set = new ArrayList<>();
 		int starting_vertex_id = vertex.get_id();
 		if(!_rem_vertex_id_set.contains(starting_vertex_id))
 		{
-			Set<BaseVertex> adj_vertex_set = super.get_adjacent_vertices(vertex);
+			List<BaseVertex> adj_vertex_set = super.get_adjacent_vertices(vertex);
 			for(BaseVertex cur_vertex : adj_vertex_set)
 			{
 				int ending_vertex_id = cur_vertex.get_id();
@@ -203,13 +204,13 @@ public class VariableGraph extends Graph
 	 * @param vertex
 	 * @return
 	 */
-	public Set<BaseVertex> get_precedent_vertices(BaseVertex vertex)
+	public List<BaseVertex> get_precedent_vertices(BaseVertex vertex)
 	{
-		Set<BaseVertex> ret_set = new HashSet<BaseVertex>();
+		List<BaseVertex> ret_set = new ArrayList<BaseVertex>();
 		if(!_rem_vertex_id_set.contains(vertex.get_id()))
 		{
 			int ending_vertex_id = vertex.get_id();
-			Set<BaseVertex> pre_vertex_set = super.get_precedent_vertices(vertex);
+			List<BaseVertex> pre_vertex_set = super.get_precedent_vertices(vertex);
 			for(BaseVertex cur_vertex : pre_vertex_set)
 			{
 				int starting_vertex_id = cur_vertex.get_id();

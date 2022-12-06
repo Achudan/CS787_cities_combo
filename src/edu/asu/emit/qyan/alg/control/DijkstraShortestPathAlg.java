@@ -140,6 +140,7 @@ public class DijkstraShortestPathAlg
 		_start_vertex_distance_index.put(start_vertex, 0d);
 		start_vertex.set_weight(0d);
 		_vertex_candidate_queue.add(start_vertex);
+		BaseVertex prevCandidate = start_vertex;
 
 		// 2. start searching for the shortest path
 		while(!_vertex_candidate_queue.isEmpty())
@@ -150,7 +151,9 @@ public class DijkstraShortestPathAlg
 
 			_determined_vertex_set.add(cur_candidate);
 
-			_improve_to_vertex(cur_candidate, is_source2sink);
+			_improve_to_vertex(cur_candidate, prevCandidate,is_source2sink);
+			
+			prevCandidate = cur_candidate;
 		}
 	}
 
@@ -158,16 +161,21 @@ public class DijkstraShortestPathAlg
 	 * Update the distance from the source to the concerned vertex.
 	 * @param vertex
 	 */
-	private void _improve_to_vertex(BaseVertex vertex, boolean is_source2sink)
+	private void _improve_to_vertex(BaseVertex vertex, BaseVertex prevVertex,boolean is_source2sink)
 	{
 		// 1. get the neighboring vertices 
-		Set<BaseVertex> neighbor_vertex_list = is_source2sink ? 
+		List<BaseVertex> neighbor_vertex_list = is_source2sink ? 
 			_graph.get_adjacent_vertices(vertex) : _graph.get_precedent_vertices(vertex);
 		// 2. update the distance passing on current vertex
 		for(BaseVertex cur_adjacent_vertex : neighbor_vertex_list)
 		{
 			// 2.1 skip if visited before
 			if(_determined_vertex_set.contains(cur_adjacent_vertex)) continue;
+
+			// if(_graph.get_edge_StartDate(vertex, cur_adjacent_vertex) == null) continue;
+			// if(_graph.get_edge_StartDate(prevVertex, vertex) != null && _graph.get_edge_StartDate(prevVertex, vertex).compareTo(_graph.get_edge_StartDate(vertex, cur_adjacent_vertex)) > 0) continue; 
+			System.out.print(_graph.get_edge_StartDate(prevVertex, vertex) + " " +  _graph.get_edge_StartDate(vertex, cur_adjacent_vertex));
+			System.out.println(" "+ prevVertex + " " + vertex + " " + " " + cur_adjacent_vertex);
 			
 			// 2.2 calculate the new distance
 			double distance = _start_vertex_distance_index.containsKey(vertex)?
@@ -238,7 +246,7 @@ public class DijkstraShortestPathAlg
 		double cost = Graph.DISCONNECTED;
 		
 		// 1. get the set of successors of the input vertex
-		Set<BaseVertex> adj_vertex_set = _graph.get_adjacent_vertices(vertex);
+		List<BaseVertex> adj_vertex_set = _graph.get_adjacent_vertices(vertex);
 		
 		// 2. make sure the input vertex exists in the index
 		if(!_start_vertex_distance_index.containsKey(vertex))
@@ -305,7 +313,7 @@ public class DijkstraShortestPathAlg
 			BaseVertex cur_vertex = vertex_list.remove(0);
 			double cost_of_cur_vertex = _start_vertex_distance_index.get(cur_vertex);
 			
-			Set<BaseVertex> pre_vertex_set = _graph.get_precedent_vertices(cur_vertex);
+			List<BaseVertex> pre_vertex_set = _graph.get_precedent_vertices(cur_vertex);
 			for(BaseVertex pre_vertex : pre_vertex_set)
 			{
 				double cost_of_pre_vertex = _start_vertex_distance_index.containsKey(pre_vertex) ?

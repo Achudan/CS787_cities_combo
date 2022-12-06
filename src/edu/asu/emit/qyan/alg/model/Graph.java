@@ -61,12 +61,12 @@ public class Graph implements BaseGraph
 	public final static double DISCONNECTED = Double.MAX_VALUE;
 	
 	// index of fan-outs of one vertex
-	protected Map<Integer, Set<BaseVertex>> _fanout_vertices_index =
-		new HashMap<Integer, Set<BaseVertex>>();
+	protected Map<Integer, List<BaseVertex>> _fanout_vertices_index =
+		new HashMap<Integer, List<BaseVertex>>();
 	
 	// index for fan-ins of one vertex
-	protected Map<Integer, Set<BaseVertex>> _fanin_vertices_index =
-		new HashMap<Integer, Set<BaseVertex>>();
+	protected Map<Integer, List<BaseVertex>> _fanin_vertices_index =
+		new HashMap<Integer, List<BaseVertex>>();
 	
 	// index for edge weights in the graph
 	protected Map<Pair<Integer, Integer>, Double> _vertex_pair_weight_index = 
@@ -269,16 +269,17 @@ public class Graph implements BaseGraph
 		}
 		
 		// update the adjacent-list of the graph
-		Set<BaseVertex> fanout_vertex_set = new HashSet<BaseVertex>();
+		List<BaseVertex> fanout_vertex_set = new ArrayList<BaseVertex>();
 		if(_fanout_vertices_index.containsKey(start_vertex_id))
 		{
 			fanout_vertex_set = _fanout_vertices_index.get(start_vertex_id);
 		}
 		fanout_vertex_set.add(_id_vertex_index.get(end_vertex_id));
 		_fanout_vertices_index.put(start_vertex_id, fanout_vertex_set);
+		System.out.println(start_vertex_id + " " + fanout_vertex_set + _fanout_vertices_index.get(start_vertex_id).size());
 		
 		//
-		Set<BaseVertex> fanin_vertex_set = new HashSet<BaseVertex>();
+		List<BaseVertex> fanin_vertex_set = new ArrayList<BaseVertex>();
 		if(_fanin_vertices_index.containsKey(end_vertex_id))
 		{
 			fanin_vertex_set = _fanin_vertices_index.get(end_vertex_id);
@@ -343,21 +344,21 @@ public class Graph implements BaseGraph
 	/* (non-Javadoc)
 	 * @see edu.asu.emit.qyan.alg.model.abstracts.BaseGraph#get_adjacent_vertices(edu.asu.emit.qyan.alg.model.abstracts.BaseVertex)
 	 */
-	public Set<BaseVertex> get_adjacent_vertices(BaseVertex vertex)
+	public List<BaseVertex> get_adjacent_vertices(BaseVertex vertex)
 	{
 		return _fanout_vertices_index.containsKey(vertex.get_id()) 
 				? _fanout_vertices_index.get(vertex.get_id()) 
-				: new HashSet<BaseVertex>();
+				: new ArrayList<BaseVertex>();
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.asu.emit.qyan.alg.model.abstracts.BaseGraph#get_precedent_vertices(edu.asu.emit.qyan.alg.model.abstracts.BaseVertex)
 	 */
-	public Set<BaseVertex> get_precedent_vertices(BaseVertex vertex)
+	public List<BaseVertex> get_precedent_vertices(BaseVertex vertex)
 	{
 		return _fanin_vertices_index.containsKey(vertex.get_id()) 
 				? _fanin_vertices_index.get(vertex.get_id()) 
-				: new HashSet<BaseVertex>();
+				: new ArrayList<BaseVertex>();
 	}
 	
 	/* (non-Javadoc)
