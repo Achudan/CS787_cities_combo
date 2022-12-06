@@ -9,8 +9,19 @@ import edu.asu.emit.qyan.alg.model.abstracts.BaseVertex;
 public class TravelRecommendation {
 
 	public static void main(String[] args) {
-		Graph graph = new VariableGraph("data/mockData_v2_chk.csv");
-		System.out.print("Dummy print");
+		Graph graph;
+		String transitMode = "any";
+		if(transitMode.equals("train")) {
+			graph = new VariableGraph("data/trainData.csv");
+		}else if(transitMode.equals("bus")) {
+				graph = new VariableGraph("data/busData.csv");
+		
+		}else if(transitMode.equals("air")){
+				graph = new VariableGraph("data/airTravel.csv");
+			
+		}else {
+				graph = new VariableGraph("data/consolidated.csv");
+		}
 		YenTopKShortestPathsAlg yenAlg = new YenTopKShortestPathsAlg(graph);
 		List<Path> shortest_paths_list = yenAlg.get_shortest_paths(
 				graph.get_vertex(4), graph.get_vertex(5), 500, 4);
