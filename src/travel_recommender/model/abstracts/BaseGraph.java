@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2004-2009 Arizona State University.  All rights
+ * Copyright (c) 2004-2008 Arizona State University.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,39 +28,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-package edu.asu.emit.qyan.test;
 
+package travel_recommender.model.abstracts;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import travel_recommender.control.DijkstraShortestPathAlg;
-import travel_recommender.model.Graph;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author <a href='mailto:Yan.Qi@asu.edu'>Yan Qi</a>
- * @version $Revision: 784 $
- * @latest $Id: ShortestPathAlgTest.java 784 2009-06-19 20:08:40Z qyan $
+ * @version $Revision: 430 $
+ * @date $Date: 2008-07-27 16:31:56 -0700 (Sun, 27 Jul 2008) $
  */
-public class ShortestPathAlgTest
+public interface BaseGraph
 {
-	Graph graph = null;
+	List<BaseVertex> get_vertex_list();
 	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception
-	{
-		// Import the graph from a file
-		graph = new Graph("data/test_50");
-	}
-
-	@Test
-	public void testShorstPathAlg()
-	{
-		System.out.println("Testing Dijkstra Algorithm.");
-		DijkstraShortestPathAlg alg = new DijkstraShortestPathAlg(graph);
-		System.out.println(alg.get_shortest_path(graph.get_vertex(0), graph.get_vertex(38),4));
-	}
+	double get_edge_weight(BaseVertex source, BaseVertex sink);
+	Date get_edge_StartDate(BaseVertex source, BaseVertex sink);
+	double get_edge_Duration(BaseVertex source, BaseVertex sink);
+	double get_edge_Cost(BaseVertex source, BaseVertex sink);
+	Set<BaseVertex> get_adjacent_vertices(BaseVertex vertex);
+	Set<BaseVertex> get_precedent_vertices(BaseVertex vertex);
 }
