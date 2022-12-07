@@ -162,6 +162,7 @@ public class YenTopKShortestPathsAlg
 	 */
 	public Path next()
 	{
+		System.out.println("next");
 		//3.1 prepare for removing vertices and arcs
 		Path cur_path = _path_candidates.poll();
 		_result_list.add(cur_path);
@@ -315,7 +316,6 @@ public class YenTopKShortestPathsAlg
 		int count = 0;
 		while(has_next() && count < top_k)
 		{
-			System.out.print(target_vertex);
 			next();
 			++count;
 		}

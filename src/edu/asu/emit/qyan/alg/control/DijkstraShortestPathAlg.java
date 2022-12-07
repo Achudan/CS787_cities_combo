@@ -170,12 +170,15 @@ public class DijkstraShortestPathAlg
 		for(BaseVertex cur_adjacent_vertex : neighbor_vertex_list)
 		{
 			// 2.1 skip if visited before
-			if(_determined_vertex_set.contains(cur_adjacent_vertex)) continue;
+			System.out.println(vertex + " " + cur_adjacent_vertex +  " " + neighbor_vertex_list);
+			if(_determined_vertex_set.contains(cur_adjacent_vertex)) {
+				continue;
+			}
 
 			// if(_graph.get_edge_StartDate(vertex, cur_adjacent_vertex) == null) continue;
 			// if(_graph.get_edge_StartDate(prevVertex, vertex) != null && _graph.get_edge_StartDate(prevVertex, vertex).compareTo(_graph.get_edge_StartDate(vertex, cur_adjacent_vertex)) > 0) continue; 
-			System.out.print(_graph.get_edge_StartDate(prevVertex, vertex) + " " +  _graph.get_edge_StartDate(vertex, cur_adjacent_vertex));
-			System.out.println(" "+ prevVertex + " " + vertex + " " + " " + cur_adjacent_vertex);
+			// System.out.print(_graph.get_edge_StartDate(prevVertex, vertex) + " " +  _graph.get_edge_StartDate(vertex, cur_adjacent_vertex));
+			// System.out.println(" "+ prevVertex + " " + vertex + " " + " " + cur_adjacent_vertex);
 			
 			// 2.2 calculate the new distance
 			double distance = _start_vertex_distance_index.containsKey(vertex)?
