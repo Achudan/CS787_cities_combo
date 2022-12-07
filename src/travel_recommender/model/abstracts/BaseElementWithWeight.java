@@ -28,39 +28,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-package edu.asu.emit.qyan.test;
-
-
-import org.junit.Before;
-import org.junit.Test;
-
-import travel_recommender.control.DijkstraShortestPathAlg;
-import travel_recommender.model.Graph;
+package travel_recommender.model.abstracts;
 
 /**
  * @author <a href='mailto:Yan.Qi@asu.edu'>Yan Qi</a>
- * @version $Revision: 784 $
- * @latest $Id: ShortestPathAlgTest.java 784 2009-06-19 20:08:40Z qyan $
+ * @version $Revision: 670 $
+ * @latest $Id: BaseElementWithWeight.java 670 2009-02-05 08:08:15Z qyan $
  */
-public class ShortestPathAlgTest
+public interface BaseElementWithWeight
 {
-	Graph graph = null;
-	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception
-	{
-		// Import the graph from a file
-		graph = new Graph("data/test_50");
-	}
-
-	@Test
-	public void testShorstPathAlg()
-	{
-		System.out.println("Testing Dijkstra Algorithm.");
-		DijkstraShortestPathAlg alg = new DijkstraShortestPathAlg(graph);
-		System.out.println(alg.get_shortest_path(graph.get_vertex(0), graph.get_vertex(38),4));
-	}
+	public double get_weight();
 }

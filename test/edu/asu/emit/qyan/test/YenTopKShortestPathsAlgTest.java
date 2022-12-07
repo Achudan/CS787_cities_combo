@@ -35,17 +35,12 @@ import java.util.List;
 
 import org.junit.Test;
 
-import edu.asu.emit.qyan.alg.control.DijkstraShortestPathAlg;
-import edu.asu.emit.qyan.alg.control.YenTopKShortestPathsAlg;
-import edu.asu.emit.qyan.alg.model.Graph;
-import edu.asu.emit.qyan.alg.model.Path;
-import edu.asu.emit.qyan.alg.model.VariableGraph;
+import travel_recommender.model.Graph;
+import travel_recommender.model.Path;
+import travel_recommender.model.VariableGraph;
+import travel_recommender.control.DijkstraShortestPathAlg;
+import travel_recommender.control.YenTopKShortestPathsAlg;
 
-/**
- * @author <a href='mailto:Yan.Qi@asu.edu'>Yan Qi</a>
- * @version $Revision: 784 $
- * @latest $Id: YenTopKShortestPathsAlgTest.java 784 2009-06-19 20:08:40Z qyan $
- */
 public class YenTopKShortestPathsAlgTest
 {
 	// The graph should be initiated only once to guarantee the correspondence 
