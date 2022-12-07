@@ -210,8 +210,8 @@ public class Graph implements BaseGraph
 //					int end_vertex_id = Integer.parseInt(str_list[1]);
 					GraphParams gp = new GraphParams();
 					gp.setWeightFlag("cost");
-					gp.setCost(Double.parseDouble(str_list[2]));
-					gp.setStartDate(new Date(Long.parseLong(str_list[3])));
+					gp.setCost(Double.parseDouble(str_list[4]));
+					gp.setStartDate(new Date(Long.parseLong(str_list[5])));
 					gp.setDuration(durationInMs(str_list[4]));
 					gp.setWeight();
 //					ArrayList<String> params = new ArrayList<>();
