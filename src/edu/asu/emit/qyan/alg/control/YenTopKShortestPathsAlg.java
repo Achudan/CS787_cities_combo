@@ -175,6 +175,7 @@ public class YenTopKShortestPathsAlg
 		//3.2 remove the vertices and arcs in the graph
 		for(int i=0; i<count-1; ++i)
 		{
+			System.out.println("next");
 			Path cur_result_path = _result_list.get(i);
 							
 			int cur_dev_vertex_id = 
@@ -190,6 +191,7 @@ public class YenTopKShortestPathsAlg
 			BaseVertex cur_succ_vertex = 
 				cur_result_path.get_vertices().get(cur_dev_vertex_id+1);
 			
+			System.out.println(cur_derivation + " " + cur_succ_vertex);
 			_graph.remove_edge(new Pair<Integer,Integer>(
 					cur_derivation.get_id(), cur_succ_vertex.get_id()));
 		}

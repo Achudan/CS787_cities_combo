@@ -42,6 +42,7 @@ public class Vertex implements BaseVertex, Comparable<Vertex>
 	private static int CURRENT_VERTEX_NUM = 0;
 	private int _id = CURRENT_VERTEX_NUM++;
 	private double _weight = 0;
+	private BaseVertex _prev;
 	
 	/**
 	 * 
@@ -66,6 +67,14 @@ public class Vertex implements BaseVertex, Comparable<Vertex>
 		_weight = status;
 	}
 	
+	public void set_prev(BaseVertex id) {
+		_prev = id;
+	}
+
+	public BaseVertex get_prev() {
+		return _prev == null?this:_prev;
+	}
+
 	public int compareTo(Vertex r_vertex)
 	{
 		double diff = this._weight - r_vertex._weight;

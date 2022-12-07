@@ -133,7 +133,6 @@ public class DijkstraShortestPathAlg {
 		_start_vertex_distance_index.put(start_vertex, 0d);
 		start_vertex.set_weight(0d);
 		_vertex_candidate_queue.add(start_vertex);
-		BaseVertex prevCandidate = start_vertex;
 
 		// 2. start searching for the shortest path
 		while (!_vertex_candidate_queue.isEmpty()) {
@@ -144,46 +143,57 @@ public class DijkstraShortestPathAlg {
 
 			_determined_vertex_set.add(cur_candidate);
 
-			_improve_to_vertex(cur_candidate, prevCandidate, is_source2sink);
-
-			prevCandidate = cur_candidate;
+			_improve_to_vertex(cur_candidate, is_source2sink);
 		}
 	}
 
 	/**
 	 * Update the distance from the source to the concerned vertex.
+	 * 
 	 * @param vertex
 	 */
-	private void _improve_to_vertex(BaseVertex vertex, BaseVertex prevVertex,boolean is_source2sink)
-	{
-		// 1. get the neighboring vertices 
-		Set<BaseVertex> neighbor_vertex_list = is_source2sink ? 
-			_graph.get_adjacent_vertices(vertex) : _graph.get_precedent_vertices(vertex);
+	private void _improve_to_vertex(BaseVertex vertex, boolean is_source2sink) {
+		// 1. get the neighboring vertices
+		Set<BaseVertex> neighbor_vertex_list = is_source2sink ? _graph.get_adjacent_vertices(vertex)
+				: _graph.get_precedent_vertices(vertex);
 		// 2. update the distance passing on current vertex
-		for(BaseVertex cur_adjacent_vertex : neighbor_vertex_list)
-		{
+		for (BaseVertex cur_adjacent_vertex : neighbor_vertex_list) {
 			// 2.1 skip if visited before
-			if(_determined_vertex_set.contains(cur_adjacent_vertex)) continue;
+			if (_determined_vertex_set.contains(cur_adjacent_vertex))
+				continue;
 
-			System.out.println(prevVertex+" "+vertex);
-			if(_graph.get_edge_StartDate(prevVertex, vertex) != null)System.out.println("df");
-			if(prevVertex!= null && _graph.get_edge_StartDate(prevVertex, vertex) != null && _graph.get_edge_StartDate(prevVertex, vertex).compareTo(_graph.get_edge_StartDate(vertex, cur_adjacent_vertex)) < 0) continue;
-			
+			// System.out.println(Graph.cityMapInverse.get(vertex.get_prev().get_id()) + " "
+			// 		+ Graph.cityMapInverse.get(vertex.get_id()) + " "
+			// 		+ Graph.cityMapInverse.get(cur_adjacent_vertex.get_id()));
+
+			// System.out.println(_graph.get_edge_weight(vertex.get_prev(), vertex));;
+			if (vertex.get_prev() != vertex && _graph.get_edge_StartDate(vertex.get_prev(), vertex) != null) {
+				if (_graph.get_edge_StartDate(vertex, cur_adjacent_vertex) != null
+						&& _graph.get_edge_StartDate(vertex.get_prev(), vertex)
+								.compareTo(_graph.get_edge_StartDate(vertex, cur_adjacent_vertex)) > 0)
+					continue;
+
+				if (_graph.get_edge_StartDate(cur_adjacent_vertex, vertex) != null
+						&& _graph.get_edge_StartDate(vertex.get_prev(), vertex)
+								.compareTo(_graph.get_edge_StartDate(cur_adjacent_vertex, vertex)) > 0)
+					continue;
+			}
 			// 2.2 calculate the new distance
-			double distance = _start_vertex_distance_index.containsKey(vertex)?
-					_start_vertex_distance_index.get(vertex) : Graph.DISCONNECTED;
-					
+			double distance = _start_vertex_distance_index.containsKey(vertex)
+					? _start_vertex_distance_index.get(vertex)
+					: Graph.DISCONNECTED;
+
 			distance += is_source2sink ? _graph.get_edge_weight(vertex, cur_adjacent_vertex)
 					: _graph.get_edge_weight(cur_adjacent_vertex, vertex);
 
 			// 2.3 update the distance if necessary
-			if(!_start_vertex_distance_index.containsKey(cur_adjacent_vertex) 
-			|| _start_vertex_distance_index.get(cur_adjacent_vertex) > distance)
-			{
+			if (!_start_vertex_distance_index.containsKey(cur_adjacent_vertex)
+					|| _start_vertex_distance_index.get(cur_adjacent_vertex) > distance) {
 				_start_vertex_distance_index.put(cur_adjacent_vertex, distance);
 
 				_predecessor_index.put(cur_adjacent_vertex, vertex);
-				
+
+				cur_adjacent_vertex.set_prev(vertex);
 				cur_adjacent_vertex.set_weight(distance);
 				_vertex_candidate_queue.add(cur_adjacent_vertex);
 			}
