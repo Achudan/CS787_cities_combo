@@ -7,11 +7,6 @@ import java.util.Vector;
 import travel_recommender.model.abstracts.BaseElementWithWeight;
 import travel_recommender.model.abstracts.BaseVertex;
 
-/**
- * @author <a href='mailto:Yan.Qi@asu.edu'>Yan Qi</a>
- * @version $Revision: 673 $
- * @latest $Date: 2009-02-05 01:19:18 -0700 (Thu, 05 Feb 2009) $
- */
 public class Path implements BaseElementWithWeight
 {
 	List<BaseVertex> _vertex_list = new Vector<BaseVertex>();

@@ -57,22 +57,12 @@ public class Graph implements BaseGraph
 	
 	static public Map<String, Integer> cityMap = new HashMap<>();
 	static public Map<Integer, String> cityMapInverse = new HashMap<>();
-	
-	
-	/**
-	 * Constructor 1 
-	 * @param data_file_name
-	 */
+
 	public Graph(final String data_file_name)
 	{
 		import_from_file(data_file_name);
 	}
 	
-	/**
-	 * Constructor 2
-	 * 
-	 * @param graph
-	 */
 	public Graph(final Graph graph_)
 	{
 		_vertex_num = graph_._vertex_num;
@@ -84,15 +74,9 @@ public class Graph implements BaseGraph
 		_vertex_pair_weight_index.putAll(graph_._vertex_pair_weight_index);
 		_vertex_pair_graph_params_index.putAll(graph_._vertex_pair_graph_params_index);
 	}
-	
-	/**
-	 * Default constructor 
-	 */
+
 	public Graph(){};
-	
-	/**
-	 * Clear members of the graph.
-	 */
+
 	public void clear()
 	{
 		_vertex_num = 0;
@@ -104,13 +88,7 @@ public class Graph implements BaseGraph
 		_vertex_pair_weight_index.clear();
 		_vertex_pair_graph_params_index.clear();
 	}
-	
-	/**
-	 * There is a requirement for the input graph. 
-	 * The ids of vertices must be consecutive. 
-	 *  
-	 * @param data_file_name
-	 */
+
 	public void import_from_file(final String data_file_name)
 	{
 		try
@@ -212,14 +190,6 @@ public class Graph implements BaseGraph
 		return durationInDouble;
 	}
 
-	/**
-	 * Note that this may not be used externally, because some other members in the class
-	 * should be updated at the same time. 
-	 * 
-	 * @param start_vertex_id
-	 * @param end_vertex_id
-	 * @param weight
-	 */
 	protected void add_edge(int start_vertex_id, int end_vertex_id, GraphParams gp)
 	{
 		double weight = gp.getWeight();
@@ -261,12 +231,7 @@ public class Graph implements BaseGraph
 		
 		++_edge_num;
 	}
-	
-	/**
-	 * Store the graph information into a file. 
-	 * 
-	 * @param file_name
-	 */
+
 	public void export_to_file(final String file_name)
 	{
 		//1. prepare the text to export
@@ -304,9 +269,6 @@ public class Graph implements BaseGraph
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.asu.emit.qyan.alg.model.abstracts.BaseGraph#get_adjacent_vertices(edu.asu.emit.qyan.alg.model.abstracts.BaseVertex)
-	 */
 	public Set<BaseVertex> get_adjacent_vertices(BaseVertex vertex)
 	{
 		return _fanout_vertices_index.containsKey(vertex.get_id()) 
@@ -314,19 +276,13 @@ public class Graph implements BaseGraph
 				: new HashSet<BaseVertex>();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.asu.emit.qyan.alg.model.abstracts.BaseGraph#get_precedent_vertices(edu.asu.emit.qyan.alg.model.abstracts.BaseVertex)
-	 */
 	public Set<BaseVertex> get_precedent_vertices(BaseVertex vertex)
 	{
 		return _fanin_vertices_index.containsKey(vertex.get_id()) 
 				? _fanin_vertices_index.get(vertex.get_id()) 
 				: new HashSet<BaseVertex>();
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.asu.emit.qyan.alg.model.abstracts.BaseGraph#get_edge_weight(edu.asu.emit.qyan.alg.model.abstracts.BaseVertex, edu.asu.emit.qyan.alg.model.abstracts.BaseVertex)
-	 */
+
 	public double get_edge_weight(BaseVertex source, BaseVertex sink)
 	{
 		return _vertex_pair_weight_index.containsKey(
@@ -363,29 +319,17 @@ public class Graph implements BaseGraph
 						  : null;
 	}
 
-	/**
-	 * Set the number of vertices in the graph
-	 * @param num
-	 */
+
 	public void set_vertex_num(int num)
 	{
 		_vertex_num = num;
 	}
-	
-	/**
-	 * Return the vertex list in the graph.
-	 */
+
 	public List<BaseVertex> get_vertex_list()
 	{
 		return _vertex_list;
 	}
-	
-	/**
-	 * Get the vertex with the input id.
-	 * 
-	 * @param id
-	 * @return
-	 */
+
 	public BaseVertex get_vertex(int id)
 	{
 		return _id_vertex_index.get(id);
