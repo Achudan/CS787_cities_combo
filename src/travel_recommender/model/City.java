@@ -1,8 +1,8 @@
 package travel_recommender.model;
 
-import travel_recommender.model.abstracts.BaseVertex;
+import travel_recommender.model.abstracts.Route;
 
-public class Vertex implements BaseVertex, Comparable<Vertex>
+public class City implements Route, Comparable<City>
 {
 	private static int CURRENT_VERTEX_NUM = 0;
 	private int _id = CURRENT_VERTEX_NUM++;
@@ -28,7 +28,7 @@ public class Vertex implements BaseVertex, Comparable<Vertex>
 		_weight = status;
 	}
 	
-	public int compareTo(Vertex r_vertex)
+	public int compareTo(City r_vertex)
 	{
 		double diff = this._weight - r_vertex._weight;
 		if(diff > 0)

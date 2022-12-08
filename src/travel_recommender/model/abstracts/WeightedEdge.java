@@ -1,6 +1,6 @@
 package travel_recommender.model.abstracts;
 
-public interface BaseElementWithWeight
+public interface WeightedEdge
 {
 	public double get_weight();
 }

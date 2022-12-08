@@ -17,35 +17,35 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import travel_recommender.model.abstracts.BaseGraph;
-import travel_recommender.model.abstracts.BaseVertex;
+import travel_recommender.model.abstracts.MapGraph;
+import travel_recommender.model.abstracts.Route;
 
-public class Graph implements BaseGraph
+public class Graph implements MapGraph
 {
 	public final static double DISCONNECTED = Double.MAX_VALUE;
 	
 	// index of fan-outs of one vertex
-	protected Map<Integer, Set<BaseVertex>> _fanout_vertices_index =
-		new HashMap<Integer, Set<BaseVertex>>();
+	protected Map<Integer, Set<Route>> _fanout_vertices_index =
+		new HashMap<Integer, Set<Route>>();
 	
 	// index for fan-ins of one vertex
-	protected Map<Integer, Set<BaseVertex>> _fanin_vertices_index =
-		new HashMap<Integer, Set<BaseVertex>>();
+	protected Map<Integer, Set<Route>> _fanin_vertices_index =
+		new HashMap<Integer, Set<Route>>();
 	
 	// index for edge weights in the graph
-	protected Map<Pair<Integer, Integer>, Double> _vertex_pair_weight_index = 
-		new HashMap<Pair<Integer,Integer>, Double>();
+	protected Map<Match<Integer, Integer>, Double> _vertex_pair_weight_index = 
+		new HashMap<Match<Integer,Integer>, Double>();
 	
 	//index for edge params in the graph
-	protected Map<Pair<Integer, Integer>, GraphParams> _vertex_pair_graph_params_index= 
-			new HashMap<Pair<Integer,Integer>, GraphParams>();
+	protected Map<Match<Integer, Integer>, GraphParams> _vertex_pair_graph_params_index= 
+			new HashMap<Match<Integer,Integer>, GraphParams>();
 	
 	// index for vertices in the graph
-	protected Map<Integer, BaseVertex> _id_vertex_index = 
-		new HashMap<Integer, BaseVertex>();
+	protected Map<Integer, Route> _id_vertex_index = 
+		new HashMap<Integer, Route>();
 	
 	// list of vertices in the graph 
-	protected List<BaseVertex> _vertex_list = new Vector<BaseVertex>();
+	protected List<Route> _vertex_list = new Vector<Route>();
 	
 	// the number of vertices in the graph
 	protected int _vertex_num = 0;
@@ -120,7 +120,7 @@ public class Graph implements BaseGraph
 					_vertex_num = Integer.parseInt(line.trim());
 					for(int i=0; i<_vertex_num; ++i)
 					{
-						BaseVertex vertex = new Vertex();
+						Route vertex = new City();
 						_vertex_list.add(vertex);
 						_id_vertex_index.put(vertex.get_id(), vertex);
 					}
@@ -197,7 +197,7 @@ public class Graph implements BaseGraph
 		}
 		
 		// update the adjacent-list of the graph
-		Set<BaseVertex> fanout_vertex_set = new HashSet<BaseVertex>();
+		Set<Route> fanout_vertex_set = new HashSet<Route>();
 		if(_fanout_vertices_index.containsKey(start_vertex_id))
 		{
 			fanout_vertex_set = _fanout_vertices_index.get(start_vertex_id);
@@ -206,7 +206,7 @@ public class Graph implements BaseGraph
 		_fanout_vertices_index.put(start_vertex_id, fanout_vertex_set);
 		
 		//
-		Set<BaseVertex> fanin_vertex_set = new HashSet<BaseVertex>();
+		Set<Route> fanin_vertex_set = new HashSet<Route>();
 		if(_fanin_vertices_index.containsKey(end_vertex_id))
 		{
 			fanin_vertex_set = _fanin_vertices_index.get(end_vertex_id);
@@ -216,11 +216,11 @@ public class Graph implements BaseGraph
 
 		// store the new edge 
 		_vertex_pair_weight_index.put(
-				new Pair<Integer, Integer>(start_vertex_id, end_vertex_id), 
+				new Match<Integer, Integer>(start_vertex_id, end_vertex_id), 
 				weight);
 		
 		_vertex_pair_graph_params_index.put(
-				new Pair<Integer, Integer>(start_vertex_id, end_vertex_id), 
+				new Match<Integer, Integer>(start_vertex_id, end_vertex_id), 
 				gp);
 		
 		++_edge_num;
@@ -231,7 +231,7 @@ public class Graph implements BaseGraph
 		//1. prepare the text to export
 		StringBuffer sb = new StringBuffer();
 		sb.append(_vertex_num+"\n\n");
-		for(Pair<Integer, Integer> cur_edge_pair : _vertex_pair_weight_index.keySet())
+		for(Match<Integer, Integer> cur_edge_pair : _vertex_pair_weight_index.keySet())
 		{
 			int starting_pt_id = cur_edge_pair.first();
 			int ending_pt_id = cur_edge_pair.second();
@@ -263,62 +263,62 @@ public class Graph implements BaseGraph
 		}
 	}
 	
-	public Set<BaseVertex> get_adjacent_vertices(BaseVertex vertex)
+	public Set<Route> get_adjacent_vertices(Route vertex)
 	{
 		return _fanout_vertices_index.containsKey(vertex.get_id()) 
 				? _fanout_vertices_index.get(vertex.get_id()) 
-				: new HashSet<BaseVertex>();
+				: new HashSet<Route>();
 	}
 
-	public Set<BaseVertex> get_precedent_vertices(BaseVertex vertex)
+	public Set<Route> get_precedent_vertices(Route vertex)
 	{
 		return _fanin_vertices_index.containsKey(vertex.get_id()) 
 				? _fanin_vertices_index.get(vertex.get_id()) 
-				: new HashSet<BaseVertex>();
+				: new HashSet<Route>();
 	}
 
-	public double get_edge_weight(BaseVertex source, BaseVertex sink)
+	public double get_edge_weight(Route source, Route sink)
 	{
 		return _vertex_pair_weight_index.containsKey(
-					new Pair<Integer, Integer>(source.get_id(), sink.get_id()))? 
+					new Match<Integer, Integer>(source.get_id(), sink.get_id()))? 
 							_vertex_pair_weight_index.get(
-									new Pair<Integer, Integer>(source.get_id(), sink.get_id())) 
+									new Match<Integer, Integer>(source.get_id(), sink.get_id())) 
 						  : DISCONNECTED;
 	}
 	
-	public Date get_edge_StartDate(BaseVertex source, BaseVertex sink)
+	public Date get_edge_StartDate(Route source, Route sink)
 	{
 		return _vertex_pair_graph_params_index.containsKey(
-					new Pair<Integer, Integer>(source.get_id(), sink.get_id()))? 
+					new Match<Integer, Integer>(source.get_id(), sink.get_id()))? 
 							_vertex_pair_graph_params_index.get(
-									new Pair<Integer, Integer>(source.get_id(), sink.get_id())).getStartDate() 
+									new Match<Integer, Integer>(source.get_id(), sink.get_id())).getStartDate() 
 						  : null;
 	}
 	
-	public long get_edge_Duration(BaseVertex source, BaseVertex sink)
+	public long get_edge_Duration(Route source, Route sink)
 	{
 		return _vertex_pair_graph_params_index.containsKey(
-					new Pair<Integer, Integer>(source.get_id(), sink.get_id()))? 
+					new Match<Integer, Integer>(source.get_id(), sink.get_id()))? 
 							_vertex_pair_graph_params_index.get(
-									new Pair<Integer, Integer>(source.get_id(), sink.get_id())).getDuration() 
+									new Match<Integer, Integer>(source.get_id(), sink.get_id())).getDuration() 
 						  : null;
 	}
 	
-	public double get_edge_Cost(BaseVertex source, BaseVertex sink)
+	public double get_edge_Cost(Route source, Route sink)
 	{
 		return _vertex_pair_graph_params_index.containsKey(
-					new Pair<Integer, Integer>(source.get_id(), sink.get_id()))? 
+					new Match<Integer, Integer>(source.get_id(), sink.get_id()))? 
 							_vertex_pair_graph_params_index.get(
-									new Pair<Integer, Integer>(source.get_id(), sink.get_id())).getCost()
+									new Match<Integer, Integer>(source.get_id(), sink.get_id())).getCost()
 						  : null;
 	}
 	
-	public String get_edge_Mode(BaseVertex source, BaseVertex sink)
+	public String get_edge_Mode(Route source, Route sink)
 	{
 		return _vertex_pair_graph_params_index.containsKey(
-					new Pair<Integer, Integer>(source.get_id(), sink.get_id()))? 
+					new Match<Integer, Integer>(source.get_id(), sink.get_id()))? 
 							_vertex_pair_graph_params_index.get(
-									new Pair<Integer, Integer>(source.get_id(), sink.get_id())).getMode()
+									new Match<Integer, Integer>(source.get_id(), sink.get_id())).getMode()
 						  : null;
 	}
 
@@ -328,12 +328,12 @@ public class Graph implements BaseGraph
 		_vertex_num = num;
 	}
 
-	public List<BaseVertex> get_vertex_list()
+	public List<Route> get_vertex_list()
 	{
 		return _vertex_list;
 	}
 
-	public BaseVertex get_vertex(int id)
+	public Route get_vertex(int id)
 	{
 		return _id_vertex_index.get(id);
 	}

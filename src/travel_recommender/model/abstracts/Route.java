@@ -1,6 +1,6 @@
 package travel_recommender.model.abstracts;
 
-public interface BaseVertex
+public interface Route
 {
 	int get_id();
 	double get_weight();

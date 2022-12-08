@@ -3,8 +3,8 @@ package travel_recommender.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import travel_recommender.control.YenTopKShortestPathsAlg;
-import travel_recommender.model.abstracts.BaseVertex;
+import travel_recommender.control.YensAlgorithm;
+import travel_recommender.model.abstracts.Route;
 
 public class TravelRecommendation_backup {
 //	mockData_v2_chk - copy
@@ -18,23 +18,23 @@ public class TravelRecommendation_backup {
 //		String transitMode = "bus";
 //		String transitMode = "train";
 		if(transitMode.equals("train")) {
-			graph = new VariableGraph("data/trainData.csv");
+			graph = new DynamicGraph("data/trainData.csv");
 		}else if(transitMode.equals("bus")) {
-				graph = new VariableGraph("data/busData.csv");
+				graph = new DynamicGraph("data/busData.csv");
 		
 		}else if(transitMode.equals("air")){
-				graph = new VariableGraph("data/airTravel.csv");
+				graph = new DynamicGraph("data/airTravel.csv");
 			
 		}else {
-				graph = new VariableGraph("data/consolidated.csv");
+				graph = new DynamicGraph("data/consolidated.csv");
 		}
-		YenTopKShortestPathsAlg yenAlg = new YenTopKShortestPathsAlg(graph);
-		List<Path> shortest_paths_list = yenAlg.get_shortest_paths(
+		YensAlgorithm yenAlg = new YensAlgorithm(graph);
+		List<DirectedEdge> shortest_paths_list = yenAlg.get_yens_shortest_paths(
 				graph.get_vertex(Graph.cityMap.get(fromCity)), graph.get_vertex(Graph.cityMap.get(toCity)), 1, 4);
 
 		
 		for (int i = 0; i < shortest_paths_list.size(); i++) {
-			Path path = shortest_paths_list.get(i);
+			DirectedEdge path = shortest_paths_list.get(i);
 			for (int j = 0; j < path._vertex_list.size() - 2; j++) {
 				if (graph.get_edge_StartDate(path._vertex_list.get(j), path._vertex_list.get(j + 1))
 						.compareTo(graph.get_edge_StartDate(path._vertex_list.get(j + 1),
@@ -44,22 +44,21 @@ public class TravelRecommendation_backup {
 			}
 		}
 
-		for (Path path : shortest_paths_list) {
+		for (DirectedEdge path : shortest_paths_list) {
 
 			ArrayList<String> routeList = new ArrayList<String>();
-			for (BaseVertex vertex : path._vertex_list) {
+			for (Route vertex : path._vertex_list) {
 				routeList.add(Graph.cityMapInverse.get(vertex.get_id()));
 			}
 			path.paths.add(routeList);
 		}
 
-		System.out.println("Total route recommendations: "+yenAlg.get_result_list().size()+"\n\n");
+		System.out.println("Total route recommendations: "+yenAlg.get_all_routes().size()+"\n\n");
 		String prev = "New York" ;
-		for (Path routes : shortest_paths_list) {
+		for (DirectedEdge routes : shortest_paths_list) {
 			for (List<String> rt : routes.paths) {
 				int stop = 0;
 				for (String place : rt) {
-//					System.out.println(graph.get_edge_Cost(graph.get_vertex(Graph.cityMap.get(place)), null));
 					if (stop == 0)
 						System.out.println("source: " + place);
 					else {

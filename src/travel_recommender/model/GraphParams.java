@@ -52,6 +52,9 @@ public class GraphParams {
 	}
 	
 	public void setMode(String modes) {
+		if(modes==null) {
+			modes = "TRAIN";
+		}
 		mode = modes;
 	}
 	

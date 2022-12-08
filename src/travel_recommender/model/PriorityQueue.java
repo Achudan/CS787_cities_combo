@@ -3,20 +3,20 @@ package travel_recommender.model;
 import java.util.LinkedList;
 import java.util.List;
 
-import travel_recommender.model.abstracts.BaseElementWithWeight;
+import travel_recommender.model.abstracts.WeightedEdge;
 
 
-public class QYPriorityQueue<E extends BaseElementWithWeight>
+public class PriorityQueue<E extends WeightedEdge>
 {
 	List<E> _element_weight_pair_list = new LinkedList<E>();
 	int _limit_size = -1;
 	boolean _is_incremental = false; 
 	
 
-	public QYPriorityQueue(){};
+	public PriorityQueue(){};
 	
 
-	public QYPriorityQueue(int limit_size, boolean is_incremental)
+	public PriorityQueue(int limit_size, boolean is_incremental)
 	{
 		_limit_size = limit_size;
 		_is_incremental = is_incremental;

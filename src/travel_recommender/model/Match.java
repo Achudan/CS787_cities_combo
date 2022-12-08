@@ -2,12 +2,12 @@
 
 package travel_recommender.model;
 
-public class Pair<TYPE1, TYPE2> 
+public class Match<TYPE1, TYPE2> 
 {
     public TYPE1 o1;
     public TYPE2 o2;
     
-    public Pair(TYPE1 o1, TYPE2 o2) 
+    public Match(TYPE1 o1, TYPE2 o2) 
     { 
     	this.o1 = o1; this.o2 = o2; 
     }
@@ -41,9 +41,9 @@ public class Pair<TYPE1, TYPE2>
     @SuppressWarnings("unchecked")
 	public boolean equals(Object obj) 
     {
-        if( ! (obj instanceof Pair))
+        if( ! (obj instanceof Match))
             return false;
-        Pair<TYPE1, TYPE2> p = (Pair<TYPE1, TYPE2>)obj;
+        Match<TYPE1, TYPE2> p = (Match<TYPE1, TYPE2>)obj;
         return same(p.o1, this.o1) && same(p.o2, this.o2);
     }
 

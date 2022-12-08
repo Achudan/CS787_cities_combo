@@ -11,23 +11,23 @@ import java.util.Set;
 import java.util.Vector;
 
 import travel_recommender.model.Graph;
-import travel_recommender.model.Path;
-import travel_recommender.model.abstracts.BaseGraph;
-import travel_recommender.model.abstracts.BaseVertex;
+import travel_recommender.model.DirectedEdge;
+import travel_recommender.model.abstracts.MapGraph;
+import travel_recommender.model.abstracts.Route;
 
-public class DijkstraShortestPathAlg
+public class DijkstraAlgorithm
 {
 	// Input
-	BaseGraph _graph = null;
+	MapGraph _graph = null;
 
 	// Intermediate variables
-	Set<BaseVertex> _determined_vertex_set = new HashSet<BaseVertex>();
-	PriorityQueue<BaseVertex> _vertex_candidate_queue = new PriorityQueue<BaseVertex>();
-	Map<BaseVertex, Double> _start_vertex_distance_index = new HashMap<BaseVertex, Double>();
+	Set<Route> _determined_vertex_set = new HashSet<Route>();
+	PriorityQueue<Route> _vertex_candidate_queue = new PriorityQueue<Route>();
+	Map<Route, Double> _start_vertex_distance_index = new HashMap<Route, Double>();
 	
-	Map<BaseVertex, BaseVertex> _predecessor_index = new HashMap<BaseVertex, BaseVertex>();
+	Map<Route, Route> _predecessor_index = new HashMap<Route, Route>();
 
-	public DijkstraShortestPathAlg(final BaseGraph graph)
+	public DijkstraAlgorithm(final MapGraph graph)
 	{
 		_graph = graph;
 	}
@@ -40,35 +40,35 @@ public class DijkstraShortestPathAlg
 		_predecessor_index.clear();
 	}
 
-	public Map<BaseVertex, Double> get_start_vertex_distance_index()
+	public Map<Route, Double> get_source_distance_index()
 	{
 		return _start_vertex_distance_index;
 	}
 
-	public Map<BaseVertex, BaseVertex> get_predecessor_index()
+	public Map<Route, Route> get_previous_index()
 	{
 		return _predecessor_index;
 	}
 
-	public void get_shortest_path_tree(BaseVertex root)
+	public void get_shortest_path_tree(Route root)
 	{
 		determine_shortest_paths(root, null, true);
 	}
 
-	public void get_shortest_path_flower(BaseVertex root)
+	public void get_shortest_path_flower(Route root)
 	{
 		determine_shortest_paths(null, root, false);
 	}
 
-	protected void determine_shortest_paths(BaseVertex source_vertex, 
-			BaseVertex sink_vertex, boolean is_source2sink)
+	protected void determine_shortest_paths(Route source_vertex, 
+			Route sink_vertex, boolean is_source2sink)
 	{
 		// 0. clean up variables
 		clear();
 		
 		// 1. initialize members
-		BaseVertex end_vertex = is_source2sink ? sink_vertex : source_vertex;
-		BaseVertex start_vertex = is_source2sink ? source_vertex : sink_vertex;
+		Route end_vertex = is_source2sink ? sink_vertex : source_vertex;
+		Route start_vertex = is_source2sink ? source_vertex : sink_vertex;
 		_start_vertex_distance_index.put(start_vertex, 0d);
 		start_vertex.set_weight(0d);
 		_vertex_candidate_queue.add(start_vertex);
@@ -76,7 +76,7 @@ public class DijkstraShortestPathAlg
 		// 2. start searching for the shortest path
 		while(!_vertex_candidate_queue.isEmpty())
 		{
-			BaseVertex cur_candidate = _vertex_candidate_queue.poll();
+			Route cur_candidate = _vertex_candidate_queue.poll();
 
 			if(cur_candidate.equals(end_vertex)) break;
 
@@ -86,13 +86,13 @@ public class DijkstraShortestPathAlg
 		}
 	}
 
-	private void _improve_to_vertex(BaseVertex vertex, boolean is_source2sink)
+	private void _improve_to_vertex(Route vertex, boolean is_source2sink)
 	{
 		// 1. get the neighboring vertices 
-		Set<BaseVertex> neighbor_vertex_list = is_source2sink ? 
+		Set<Route> neighbor_vertex_list = is_source2sink ? 
 			_graph.get_adjacent_vertices(vertex) : _graph.get_precedent_vertices(vertex);
 		// 2. update the distance passing on current vertex
-		for(BaseVertex cur_adjacent_vertex : neighbor_vertex_list)
+		for(Route cur_adjacent_vertex : neighbor_vertex_list)
 		{
 			// 2.1 skip if visited before
 			if(_determined_vertex_set.contains(cur_adjacent_vertex)) continue;
@@ -118,20 +118,20 @@ public class DijkstraShortestPathAlg
 		}
 	}
 
-	public Path get_shortest_path(BaseVertex source_vertex, BaseVertex sink_vertex, int stops)
+	public DirectedEdge get_shortest_path(Route source_vertex, Route sink_vertex, int stops)
 	{
 		determine_shortest_paths(source_vertex, sink_vertex, true);
 		//
-		List<BaseVertex> vertex_list = new Vector<BaseVertex>();
+		List<Route> vertex_list = new Vector<Route>();
 		double weight = _start_vertex_distance_index.containsKey(sink_vertex) ?  
 			_start_vertex_distance_index.get(sink_vertex) : Graph.DISCONNECTED;
 		if(weight != Graph.DISCONNECTED)
 		{
-			BaseVertex cur_vertex = sink_vertex;
+			Route cur_vertex = sink_vertex;
 			do{
 				if(vertex_list.size()+1>stops) {
 					System.out.println("Stops count greater than 4");
-					return new Path();
+					return new DirectedEdge();
 				}
 				vertex_list.add(cur_vertex);
 				cur_vertex = _predecessor_index.get(cur_vertex);
@@ -141,17 +141,17 @@ public class DijkstraShortestPathAlg
 			Collections.reverse(vertex_list);
 		}
 		//
-		return new Path(vertex_list, weight);
+		return new DirectedEdge(vertex_list, weight);
 	}
 	
 	/// for updating the cost
 	
-	public Path update_cost_forward(BaseVertex vertex)
+	public DirectedEdge update_cost_forward(Route vertex)
 	{
 		double cost = Graph.DISCONNECTED;
 		
 		// 1. get the set of successors of the input vertex
-		Set<BaseVertex> adj_vertex_set = _graph.get_adjacent_vertices(vertex);
+		Set<Route> adj_vertex_set = _graph.get_adjacent_vertices(vertex);
 		
 		// 2. make sure the input vertex exists in the index
 		if(!_start_vertex_distance_index.containsKey(vertex))
@@ -160,7 +160,7 @@ public class DijkstraShortestPathAlg
 		}
 		
 		// 3. update the distance from the root to the input vertex if necessary
-		for(BaseVertex cur_vertex : adj_vertex_set)
+		for(Route cur_vertex : adj_vertex_set)
 		{
 			// 3.1 get the distance from the root to one successor of the input vertex
 			double distance = _start_vertex_distance_index.containsKey(cur_vertex)?
@@ -181,15 +181,15 @@ public class DijkstraShortestPathAlg
 		}
 		
 		// 4. create the sub_path if exists
-		Path sub_path = null;
+		DirectedEdge sub_path = null;
 		if(cost < Graph.DISCONNECTED) 
 		{
-			sub_path = new Path();
+			sub_path = new DirectedEdge();
 			sub_path.set_weight(cost);
-			List<BaseVertex> vertex_list = sub_path.get_vertices();
+			List<Route> vertex_list = sub_path.get_vertices();
 			vertex_list.add(vertex);
 			
-			BaseVertex sel_vertex = _predecessor_index.get(vertex);
+			Route sel_vertex = _predecessor_index.get(vertex);
 			while(sel_vertex != null)
 			{
 				vertex_list.add(sel_vertex);
@@ -200,20 +200,20 @@ public class DijkstraShortestPathAlg
 		return sub_path;
 	}
 
-	public void correct_cost_backward(BaseVertex vertex)
+	public void correct_cost_backward(Route vertex)
 	{
 		// 1. initialize the list of vertex to be updated
-		List<BaseVertex> vertex_list = new LinkedList<BaseVertex>();
+		List<Route> vertex_list = new LinkedList<Route>();
 		vertex_list.add(vertex);
 		
 		// 2. update the cost of relevant precedents of the input vertex
 		while(!vertex_list.isEmpty())
 		{
-			BaseVertex cur_vertex = vertex_list.remove(0);
+			Route cur_vertex = vertex_list.remove(0);
 			double cost_of_cur_vertex = _start_vertex_distance_index.get(cur_vertex);
 			
-			Set<BaseVertex> pre_vertex_set = _graph.get_precedent_vertices(cur_vertex);
-			for(BaseVertex pre_vertex : pre_vertex_set)
+			Set<Route> pre_vertex_set = _graph.get_precedent_vertices(cur_vertex);
+			for(Route pre_vertex : pre_vertex_set)
 			{
 				double cost_of_pre_vertex = _start_vertex_distance_index.containsKey(pre_vertex) ?
 						_start_vertex_distance_index.get(pre_vertex) : Graph.DISCONNECTED;

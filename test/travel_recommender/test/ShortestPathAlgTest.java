@@ -3,7 +3,7 @@ package travel_recommender.test;
 import org.junit.Before;
 import org.junit.Test;
 
-import travel_recommender.control.DijkstraShortestPathAlg;
+import travel_recommender.control.DijkstraAlgorithm;
 import travel_recommender.model.Graph;
 
 public class ShortestPathAlgTest
@@ -21,7 +21,7 @@ public class ShortestPathAlgTest
 	public void testShorstPathAlg()
 	{
 		System.out.println("Testing Dijkstra Algorithm.");
-		DijkstraShortestPathAlg alg = new DijkstraShortestPathAlg(graph);
+		DijkstraAlgorithm alg = new DijkstraAlgorithm(graph);
 		System.out.println(alg.get_shortest_path(graph.get_vertex(0), graph.get_vertex(38),4));
 	}
 }

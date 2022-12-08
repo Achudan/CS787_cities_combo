@@ -5,22 +5,22 @@ import java.util.List;
 import org.junit.Test;
 
 import travel_recommender.model.Graph;
-import travel_recommender.model.Path;
-import travel_recommender.model.VariableGraph;
-import travel_recommender.control.DijkstraShortestPathAlg;
-import travel_recommender.control.YenTopKShortestPathsAlg;
+import travel_recommender.model.DirectedEdge;
+import travel_recommender.model.DynamicGraph;
+import travel_recommender.control.DijkstraAlgorithm;
+import travel_recommender.control.YensAlgorithm;
 
 public class YenTopKShortestPathsAlgTest
 {
 	// The graph should be initiated only once to guarantee the correspondence 
 	// between vertex id and node id in input text file. 
-	static Graph graph = new VariableGraph("data/test_6_2");
+	static Graph graph = new DynamicGraph("data/test_6_2");
 	
 	//@Test
 	public void testDijkstraShortestPathAlg()
 	{
 		System.out.println("Testing Dijkstra Shortest Path Algorithm!");
-		DijkstraShortestPathAlg alg = new DijkstraShortestPathAlg(graph);
+		DijkstraAlgorithm alg = new DijkstraAlgorithm(graph);
 		System.out.println(alg.get_shortest_path(graph.get_vertex(4), graph.get_vertex(5),1));
 	}
 	
@@ -28,18 +28,18 @@ public class YenTopKShortestPathsAlgTest
 	public void testYenShortestPathsAlg()
 	{		
 		System.out.println("Testing batch processing of top-k shortest paths!");
-		YenTopKShortestPathsAlg yenAlg = new YenTopKShortestPathsAlg(graph);
-		List<Path> shortest_paths_list = yenAlg.get_shortest_paths(
+		YensAlgorithm yenAlg = new YensAlgorithm(graph);
+		List<DirectedEdge> shortest_paths_list = yenAlg.get_yens_shortest_paths(
 				graph.get_vertex(4), graph.get_vertex(5), 100, 3);
 		System.out.println(":"+shortest_paths_list);
-		System.out.println(yenAlg.get_result_list().size());	
+		System.out.println(yenAlg.get_all_routes().size());	
 	}
 	
 	//@Test
 	public void testYenShortestPathsAlg2()
 	{
 		System.out.println("Obtain all paths in increasing order! - updated!");
-		YenTopKShortestPathsAlg yenAlg = new YenTopKShortestPathsAlg(
+		YensAlgorithm yenAlg = new YensAlgorithm(
 				graph, graph.get_vertex(4), graph.get_vertex(5));
 		int i=0;
 		while(yenAlg.has_next())
@@ -48,8 +48,8 @@ public class YenTopKShortestPathsAlgTest
 		}
 		
 		System.out.println("Result # :"+i);
-		System.out.println("Candidate # :"+yenAlg.get_cadidate_size());
-		System.out.println("All generated : "+yenAlg.get_generated_path_size());
+		System.out.println("Candidate # :"+yenAlg.get_all_options_size());
+		System.out.println("All generated : "+yenAlg.get_generated_route_size());
 		
 	}
 	
