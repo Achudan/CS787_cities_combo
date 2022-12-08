@@ -1,13 +1,12 @@
 package travel_recommender.model;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import travel_recommender.control.YenTopKShortestPathsAlg;
 import travel_recommender.model.abstracts.BaseVertex;
 
-public class TravelRecommendation {
+public class TravelRecommendation_backup {
 //	mockData_v2_chk - copy
 
 	public static void main(String[] args) {
@@ -31,30 +30,22 @@ public class TravelRecommendation {
 		}
 		YenTopKShortestPathsAlg yenAlg = new YenTopKShortestPathsAlg(graph);
 		List<Path> shortest_paths_list = yenAlg.get_shortest_paths(
-				graph.get_vertex(Graph.cityMap.get(fromCity)), graph.get_vertex(Graph.cityMap.get(toCity)), 500, 4);
-		
-		boolean[] show = new boolean[shortest_paths_list.size()];
-		for (int i = 0; i < show.length; i++) {
-			show[i] = true;
-		}
+				graph.get_vertex(Graph.cityMap.get(fromCity)), graph.get_vertex(Graph.cityMap.get(toCity)), 1, 4);
 
+		
 		for (int i = 0; i < shortest_paths_list.size(); i++) {
 			Path path = shortest_paths_list.get(i);
 			for (int j = 0; j < path._vertex_list.size() - 2; j++) {
-				Date date = graph.get_edge_StartDate(path._vertex_list.get(j), path._vertex_list.get(j + 1));
-				date = new Date(date.getTime() + (30 * 60 * 1000) + graph.get_edge_Duration(path._vertex_list.get(j), path._vertex_list.get(j + 1)));
-				if (date
+				if (graph.get_edge_StartDate(path._vertex_list.get(j), path._vertex_list.get(j + 1))
 						.compareTo(graph.get_edge_StartDate(path._vertex_list.get(j + 1),
 								path._vertex_list.get(j + 2))) > 0) {
-					show[i] = false;
+					shortest_paths_list.remove(i--);
 				}
 			}
 		}
 
-		int index = 0, count = 0;
 		for (Path path : shortest_paths_list) {
-			if(!show[index++]) continue;
-			count++;
+
 			ArrayList<String> routeList = new ArrayList<String>();
 			for (BaseVertex vertex : path._vertex_list) {
 				routeList.add(Graph.cityMapInverse.get(vertex.get_id()));
@@ -62,11 +53,9 @@ public class TravelRecommendation {
 			path.paths.add(routeList);
 		}
 
-		System.out.println("Total route recommendations: "+count+"\n\n");
-		
-		index = 0;
+		System.out.println("Total route recommendations: "+yenAlg.get_result_list().size()+"\n\n");
+		String prev = "New York" ;
 		for (Path routes : shortest_paths_list) {
-			if(!show[index++]) continue;
 			for (List<String> rt : routes.paths) {
 				int stop = 0;
 				for (String place : rt) {
@@ -74,11 +63,17 @@ public class TravelRecommendation {
 					if (stop == 0)
 						System.out.println("source: " + place);
 					else {
-						if (stop == rt.size() - 1)
+						if (stop == rt.size() - 1) {
+							System.out.println(graph.get_edge_Mode(graph.get_vertex(Graph.cityMap.get(prev)),graph.get_vertex(Graph.cityMap.get(place))));
 							System.out.println("destination: " + place);
-						else
+						}
+						else {
+							
+							System.out.println(graph.get_edge_Mode(graph.get_vertex(Graph.cityMap.get(prev)),graph.get_vertex(Graph.cityMap.get(place))));
 							System.out.println("Stop " + stop + ": " + place);
+						}
 					}
+					prev = place;
 					stop++;
 				}
 			}

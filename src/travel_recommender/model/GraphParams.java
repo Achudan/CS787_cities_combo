@@ -7,8 +7,9 @@ public class GraphParams {
 	private double weight = 0d;
 	private double cost = 0d;
 	private Date startDate = null;
-	private double duration = 0l;
+	private long duration = 0l;
 	private int weightFlag = 0;
+	private String mode = "";
 	
 	public void setWeightFlag(String constraint) {
 		weightFlag = constraint.equals("cost") ? 1 : 0;
@@ -26,7 +27,7 @@ public class GraphParams {
 		startDate = s;
 	}
 	
-	public void setDuration(double d) {
+	public void setDuration(long d) {
 		duration = d;
 	}
 	
@@ -46,8 +47,16 @@ public class GraphParams {
 		return startDate;
 	}
 	
-	public double getDuration() {
+	public long getDuration() {
 		return duration;
+	}
+	
+	public void setMode(String modes) {
+		mode = modes;
+	}
+	
+	public String getMode() {
+		return mode;
 	}
 	
 

@@ -154,8 +154,9 @@ public class Graph implements BaseGraph
 					gp.setWeightFlag("cost");
 					gp.setCost(Double.parseDouble(str_list[4]));
 					gp.setStartDate(new Date(Long.parseLong(str_list[5])));
-					gp.setDuration(durationInMs(str_list[4]));
+					gp.setDuration(durationInMs(str_list[6]));
 					gp.setWeight();
+					gp.setMode(str_list[7]);
 //					ArrayList<String> params = new ArrayList<>();
 //					params.add(String.valueOf(str_list[2]));
 					add_edge(start_vertex_id, end_vertex_id, gp);
@@ -178,16 +179,9 @@ public class Graph implements BaseGraph
 		cityMapInverse.put(v, k);
 	}
 
-	private double durationInMs(String duration) {
-		double d = Double.parseDouble(duration);
-        long hrs = (long) d;
-        d = d - Math.floor(d);
-        long halfHour = 0;
-        if (d == 0.5)
-            halfHour = 30;
-        long HOUR = 3600 * 1000;
-        double durationInDouble = hrs * HOUR + (halfHour * 60 * 1000) + (30 * 60 * 1000);
-		return durationInDouble;
+	private long durationInMs(String duration) {
+		long d = Long.parseLong(duration);
+		return d;
 	}
 
 	protected void add_edge(int start_vertex_id, int end_vertex_id, GraphParams gp)
@@ -301,7 +295,7 @@ public class Graph implements BaseGraph
 						  : null;
 	}
 	
-	public double get_edge_Duration(BaseVertex source, BaseVertex sink)
+	public long get_edge_Duration(BaseVertex source, BaseVertex sink)
 	{
 		return _vertex_pair_graph_params_index.containsKey(
 					new Pair<Integer, Integer>(source.get_id(), sink.get_id()))? 
@@ -316,6 +310,15 @@ public class Graph implements BaseGraph
 					new Pair<Integer, Integer>(source.get_id(), sink.get_id()))? 
 							_vertex_pair_graph_params_index.get(
 									new Pair<Integer, Integer>(source.get_id(), sink.get_id())).getCost()
+						  : null;
+	}
+	
+	public String get_edge_Mode(BaseVertex source, BaseVertex sink)
+	{
+		return _vertex_pair_graph_params_index.containsKey(
+					new Pair<Integer, Integer>(source.get_id(), sink.get_id()))? 
+							_vertex_pair_graph_params_index.get(
+									new Pair<Integer, Integer>(source.get_id(), sink.get_id())).getMode()
 						  : null;
 	}
 
